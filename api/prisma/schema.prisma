@@ -8,83 +8,101 @@ datasource db {
 }
 
 model SolarSystem {
-  id                    String   @id @default(uuid())
-  dataProvider1        String?
-  dataProvider2        String?
-  systemId1           String?
-  systemId2           String?
-  installationDate    DateTime?
-  pvSystemSizeDc      Float?
-  totalInstalledPrice Float?
-  customerSegment     String?
-  expansionSystem     Boolean?
-  multiplePhaseSystem Boolean?
-  rebateOrGrant       Float?
-  ttsLinkId           String?
-  newConstruction     Boolean?
-  tracking            Boolean?
-  groundMounted       Boolean?
-  zipCode             String?
-  city                String?
-  state               String?
-  utilityServiceTerritory String?
-  thirdPartyOwned     Boolean?
-  installerName       String?
-  selfInstalled       Boolean?
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
+  id                        String   @id @default(uuid()) @db.Uuid
+  dataProvider1             String?  @map("data_provider_1")
+  dataProvider2             String?  @map("data_provider_2")
+  systemId1                 String?  @map("system_id_1")
+  systemId2                 String?  @map("system_id_2")
+  installationDate          DateTime? @map("installation_date")
+  pvSystemSizeDc            Decimal? @map("pv_system_size_dc") @db.Decimal(10,2)
+  totalInstalledPrice       Decimal? @map("total_installed_price") @db.Decimal(12,2)
+  customerSegment           customer_segment? @map("customer_segment")
+  expansionSystem           Boolean? @map("expansion_system")
+  multiplePhaseSystem       Boolean? @map("multiple_phase_system")
+  rebateOrGrant             Decimal? @map("rebate_or_grant") @db.Decimal(12,2)
+  ttsLinkId                 String?  @map("tts_link_id")
+  newConstruction           Boolean? @map("new_construction")
+  tracking                  Boolean?
+  groundMounted             Boolean? @map("ground_mounted")
+  zipCode                   String?  @map("zip_code")
+  city                      String?
+  state                     String?
+  utilityServiceTerritory   String?  @map("utility_service_territory")
+  thirdPartyOwned           Boolean? @map("third_party_owned")
+  installerName             String?  @map("installer_name")
+  selfInstalled             Boolean? @map("self_installed")
+  createdAt                 DateTime @default(now()) @map("created_at")
+  updatedAt                 DateTime @updatedAt @map("updated_at")
 
-  moduleConfigurations    ModuleConfiguration[]
-  inverterConfigurations  InverterConfiguration[]
-  batteryConfigurations   BatteryConfiguration[]
+  moduleConfigurations      ModuleConfiguration[]
+  inverterConfigurations    InverterConfiguration[]
+  batteryConfigurations     BatteryConfiguration[]
+
+  @@map("solar_systems")
 }
 
 model ModuleConfiguration {
-  id                String   @id @default(uuid())
-  solarSystemId     String
-  configurationNumber Int
-  azimuth          Float?
-  tilt             Float?
-  moduleManufacturer String?
-  moduleModel      String?
-  moduleQuantity   Int?
-  technologyType   String?
-  bipv             Boolean?
-  bifacial         Boolean?
-  nameplateCapacity Float?
-  efficiency       Float?
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  id                  String   @id @default(uuid()) @db.Uuid
+  solarSystemId       String   @map("solar_system_id")
+  configurationNumber Int?     @map("configuration_number")
+  azimuth             Decimal? @db.Decimal(5,2)
+  tilt                Decimal? @db.Decimal(5,2)
+  moduleManufacturer  String?  @map("module_manufacturer")
+  moduleModel         String?  @map("module_model")
+  moduleQuantity      Int?     @map("module_quantity")
+  technologyType      String?  @map("technology_type")
+  bipv                Boolean?
+  bifacial            Boolean?
+  nameplateCapacity   Decimal? @map("nameplate_capacity") @db.Decimal(10,2)
+  efficiency          Decimal? @db.Decimal(5,2)
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
 
-  solarSystem      SolarSystem @relation(fields: [solarSystemId], references: [id])
+  solarSystem         SolarSystem @relation(fields: [solarSystemId], references: [id])
+
+  @@map("module_configurations")
 }
 
 model InverterConfiguration {
-  id                String   @id @default(uuid())
-  solarSystemId     String
-  configurationNumber Int
-  inverterManufacturer String?
-  inverterModel    String?
-  inverterQuantity Int?
-  microInverter    Boolean?
-  builtInMeter     Boolean?
-  outputCapacity   Float?
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  id                  String   @id @default(uuid()) @db.Uuid
+  solarSystemId       String   @map("solar_system_id")
+  configurationNumber Int?     @map("configuration_number")
+  inverterManufacturer String? @map("inverter_manufacturer")
+  inverterModel       String?  @map("inverter_model")
+  inverterQuantity    Int?     @map("inverter_quantity")
+  microInverter       Boolean? @map("micro_inverter")
+  builtInMeter        Boolean? @map("built_in_meter")
+  outputCapacity      Decimal? @map("output_capacity") @db.Decimal(10,2)
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
 
-  solarSystem      SolarSystem @relation(fields: [solarSystemId], references: [id])
+  solarSystem         SolarSystem @relation(fields: [solarSystemId], references: [id])
+
+  @@map("inverter_configurations")
 }
 
 model BatteryConfiguration {
-  id                String   @id @default(uuid())
-  solarSystemId     String
-  batteryManufacturer String?
-  batteryModel     String?
-  ratedCapacityKw  Float?
-  ratedCapacityKwh Float?
-  batteryPrice     Float?
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  id                String   @id @default(uuid()) @db.Uuid
+  solarSystemId     String   @map("solar_system_id")
+  batteryManufacturer String? @map("battery_manufacturer")
+  batteryModel      String?  @map("battery_model")
+  ratedCapacityKw   Decimal? @map("rated_capacity_kw") @db.Decimal(10,2)
+  ratedCapacityKwh  Decimal? @map("rated_capacity_kwh") @db.Decimal(10,2)
+  batteryPrice      Decimal? @map("battery_price") @db.Decimal(12,2)
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
 
-  solarSystem      SolarSystem @relation(fields: [solarSystemId], references: [id])
+  solarSystem       SolarSystem @relation(fields: [solarSystemId], references: [id])
+
+  @@map("battery_configurations")
+}
+
+enum customer_segment {
+  RES
+  COM
+  SCHOOL
+  GOV
+  NON_PROFIT @map("NON-PROFIT")
+  NON_RES @map("NON-RES")
+  @@map("customer_segment")
 } 
