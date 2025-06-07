@@ -1,0 +1,15 @@
+{
+  "name": "suntrack-database",
+  "version": "1.0.0",
+  "description": "Database service for SunTrack ORM",
+  "main": "scripts/import-csv.js",
+  "scripts": {
+    "import": "node scripts/import-csv.js"
+  },
+  "dependencies": {
+    "csv-parse": "^5.5.3",
+    "dotenv": "^16.4.1",
+    "pg": "^8.11.3",
+    "pg-promise": "^11.5.4"
+  }
+} 
